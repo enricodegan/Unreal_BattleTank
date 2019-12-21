@@ -1,3 +1,9 @@
+################
+# Quixel Files #
+################
+*MSPresets
+*QuixelMegascans
+
 *.VC.db
 
 # Visual Studio 2015 user specific files
