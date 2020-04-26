@@ -48,7 +48,6 @@ void ATankPlayerController::AimTowardsCrosshair()
 	}
 }
 
-
 bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
 {
 	/// Find the crosshair position in pixel coordinates
@@ -56,45 +55,43 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	GetViewportSize(ViewportSizeX, ViewportSizeY);
 	auto ScreenLocation = FVector2D(CrosshairXLocation * ViewportSizeX, CrosshairYLocation * ViewportSizeY);
 
-	// Deproject the screen position of the crosshair to a world direction
-	FVector LookDirection;
-	if (GetLookDirection(ScreenLocation, LookDirection))
-	{
-		GetLookVectorHitLocation(LookDirection, OutHitLocation); // Line trace and see what we hit (up to max range)
-	}
+
+	GetLookVectorHitLocation(ScreenLocation, OutHitLocation);
 	return true;
 }
 
-bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector &OutLookDirection) const
+bool ATankPlayerController::GetLookVectorHitLocation(FVector2D ScreenLocation, FVector& OutHitLocation) const
 {
-	FVector CameraWorldLocation;
-	return DeprojectScreenPositionToWorld(
-		ScreenLocation.X, 
-		ScreenLocation.Y, 
-		CameraWorldLocation, 
-		OutLookDirection // Unit vector
-	);
-}
-
-bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& OutHitLocation) const
-{
-	// TODO : Replace with this function:
-	// GetHitResultAtScreenPosition(ScreenLocation, ECC_Visibility, false, OutHitLocation);
-	// https://www.udemy.com/course/unrealcourse/learn/lecture/5231428#questions/10006844
-	
-	FHitResult HitResult;
-	auto StartLocation = PlayerCameraManager->GetCameraLocation();
-	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
-	if (GetWorld()->LineTraceSingleByChannel(
-			HitResult, 
-			StartLocation, 
-			EndLocation, 
-			ECollisionChannel::ECC_Visibility)
-		)
+	FHitResult HitResult; 
+	if (GetHitResultAtScreenPosition(ScreenLocation, ECollisionChannel::ECC_Visibility, false, HitResult))
 	{
 		OutHitLocation = HitResult.Location; // Set hit location
 		return true;
 	}
 	OutHitLocation = FVector(0);
 	return false; // Line trace didn't succeed
+
+	/* How Unreal Course Accomplished the LineTrace:
+	|| Check "Lecture 210. Creating an Out Parameter Method" to "Lecture 213. Using LineTraceSingleByChannel()" for more information... 
+	||
+	||	FHitResult HitResult;
+	||	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	||	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	||	
+	||	
+	||	if (GetWorld()->LineTraceSingleByChannel(
+	||			HitResult, 
+	||			StartLocation, 
+	||			EndLocation, 
+	||			ECollisionChannel::ECC_Visibility)
+	||		)
+	||	{
+	||		OutHitLocation = HitResult.Location; // Set hit location
+	||		return true;
+	||	}
+	||	OutHitLocation = FVector(0);
+	||	return false; // Line trace didn't succeed
+	||	
+	*/
+
 }
