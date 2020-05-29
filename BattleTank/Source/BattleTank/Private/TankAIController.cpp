@@ -55,7 +55,7 @@ ATank* ATankAIController::GetControlledTank() const
 ATank* ATankAIController::GetPlayerTank() const
 {
 	auto PlayerPawn = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	// ^^^ This pointer has no reason to protected because anywyas the Casting will fail if the pointer is either nullptr or an invalid ptr.
+	// ^^^ This pointer has no reason to protected because the Casting will fail if the pointer is either nullptr or an invalid ptr.
 	return Cast<ATank>(PlayerPawn);
 
 }
