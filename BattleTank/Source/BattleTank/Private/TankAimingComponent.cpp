@@ -20,42 +20,46 @@ void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
 	Barrel = BarrelToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
 	if (!Barrel) { return; }
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-
-	if (UGameplayStatics::SuggestProjectileVelocity( // Calculate the Launch Velocity
-			this, 
-			OutLaunchVelocity, 
-			StartLocation, 
-			HitLocation, 
-			LaunchSpeed, 
-			false, 
-			0.0f, 
-			0.0f, 
-			ESuggestProjVelocityTraceOption::DoNotTrace)
-		) 
+	bool bHasAimSolution = UGameplayStatics::SuggestProjectileVelocity( // Calculate the Launch Velocity
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		HitLocation,
+		LaunchSpeed,
+		/* This function already has default parameters for the below variables, so we don't need to put these values in.
+		|| false,
+		|| 0.0f,
+		|| 0.0f,
+		*/
+		ESuggestProjVelocityTraceOption::DoNotTrace
+	);
+	if (bHasAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards(AimDirection);
+		
 		auto OurTankName = GetOwner()->GetName();
 		UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *OurTankName, *AimDirection.ToString())
 	}
+}
+
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+{
+	// Get current barrel position
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *AimAsRotator.ToString())
+	
+	// Get the desired barrel position (AimDirection)
+	
+
+	// Move the barrel the difference between current and desired
+		// Given the max elevation speed and the frame time
 }
