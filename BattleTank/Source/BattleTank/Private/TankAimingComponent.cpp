@@ -12,25 +12,33 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true; // TODO : should this really tick?
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if (!TurretToSet) { return; }
 	Turret = TurretToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
 	if (!Barrel) { return; }
+	if (!Turret) { return; }
 
+	// Turret Movement
+	auto AimRotation = HitLocation.GetSafeNormal();
+	MoveTurretTowards(AimRotation);
+
+	// Barrel Movement
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	bool bHasAimSolution = UGameplayStatics::SuggestProjectileVelocity( // Calculate the Launch Velocity
@@ -48,6 +56,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	);
 	if (bHasAimSolution)
 	{
+		// GetSafeNormal() gets the normalized vector (a unit vector)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 		
@@ -57,7 +66,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	else
 	{
 		auto Time = GetWorld()->GetTimeSeconds();
-		// UE_LOG(LogTemp, Warning, TEXT("%f: NO aim solution found"), Time)
+		UE_LOG(LogTemp, Warning, TEXT("%f: NO aim solution found"), Time)
 	}
 }
 
@@ -69,20 +78,18 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch); // TODO remove magic number
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
 
+// TODO give player full control over the turret (no influence from bHasAimSolution)
+	// A separate Turret Movement function allows the player to have full control over the turret (while the Barrel adjusts automatically)
 void UTankAimingComponent::MoveTurretTowards(FVector AimRotation)
 {
-	/* TODO (for now, just pass in a random rotation)
-	PlayerController passes in an AimRotation determined by using the cursor location
-	AI passes in an AimRotation determined automatically by using the PlayerLocation
-	*/
-	
 	// Get current turret position
 	auto TurretRotator = Turret->GetForwardVector().Rotation();
 	// Get the the difference between desires turret position (AimRotation) and current turret position
 	auto RotationAsRotator = AimRotation.Rotation();
+	auto DeltaRotator = RotationAsRotator - TurretRotator;
 
-	Turret->Rotate(1); // TODO remove magic number
+	Turret->Rotate(DeltaRotator.Yaw);
 }

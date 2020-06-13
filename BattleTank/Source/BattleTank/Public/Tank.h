@@ -39,6 +39,6 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000; // TODO : fine sensible launch speed for bomb!
+	float LaunchSpeed = 4000;
 
 };

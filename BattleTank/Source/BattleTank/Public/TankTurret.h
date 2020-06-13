@@ -15,9 +15,10 @@ class BATTLETANK_API UTankTurret : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
-	void Rotate(float); // TODO add float name
+	// -1 is maximum sideways speed, and +1 is maximum sideways speed
+	void Rotate(float RelativeSpeed);
 
 private:
 	UPROPERTY(EditAnywhere, Category = Setup)
-	float MaxDegreesPerSecond = 5; // TODO change magic number
+	float MaxDegreesPerSecond = 30;
 };
