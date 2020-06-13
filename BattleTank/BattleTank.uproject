@@ -18,6 +18,10 @@
 		{
 			"Name": "FMODStudio",
 			"Enabled": false
+		},
+		{
+			"Name": "Landmass",
+			"Enabled": true
 		}
 	]
 }
