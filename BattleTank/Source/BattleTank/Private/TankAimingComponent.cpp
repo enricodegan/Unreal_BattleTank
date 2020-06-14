@@ -59,9 +59,6 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		// GetSafeNormal() gets the normalized vector (a unit vector)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
-		
-		auto Time = GetWorld()->GetTimeSeconds();
-		// UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), Time)
 	}
 	else
 	{
