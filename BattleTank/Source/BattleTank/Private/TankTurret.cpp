@@ -14,6 +14,9 @@ void UTankTurret::Rotate(float RelativeSpeed)
 		// `.Yaw` gives us the rotation.
 	auto RawNewRotation = RelativeRotation.Yaw + RotationChange;
 	
+	// TODO fix turret rotation bugs
+		// tank can aim at itself
+		// turning gets messed up?
 	SetRelativeRotation(FRotator(0, RawNewRotation, 0));
 	
 

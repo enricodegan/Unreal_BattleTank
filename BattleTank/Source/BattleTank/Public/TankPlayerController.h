@@ -23,13 +23,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float CrosshairXLocation = 0.5;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float CrosshairYLocation = 0.33333;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float LineTraceRange = 1000000.0;
 
 private:
