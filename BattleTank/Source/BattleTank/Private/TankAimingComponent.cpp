@@ -34,9 +34,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	if (!Barrel) { return; }
 	if (!Turret) { return; }
 
+	/*
 	// Turret Movement
 	auto AimRotation = HitLocation.GetSafeNormal();
 	MoveTurretTowards(AimRotation);
+	*/
 
 	// Barrel Movement
 	FVector OutLaunchVelocity;
@@ -76,8 +78,10 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
 
+/*
 // TODO give player full control over the turret (no influence from bHasAimSolution)
 	// A separate Turret Movement function allows the player to have full control over the turret (while the Barrel adjusts automatically)
 void UTankAimingComponent::MoveTurretTowards(FVector AimRotation)
@@ -90,3 +94,4 @@ void UTankAimingComponent::MoveTurretTowards(FVector AimRotation)
 
 	Turret->Rotate(DeltaRotator.Yaw);
 }
+*/
