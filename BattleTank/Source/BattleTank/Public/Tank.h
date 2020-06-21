@@ -7,7 +7,7 @@
 
 /// Forward Declaration
 class UTankBarrel;
-class UTankTurret;
+//class UTankTurret; // TODO delete? Doesn't seem like it's needed...
 class AProjectile;
 class UTankAimingComponent; 
 class UTankMovementComponent;
@@ -27,7 +27,7 @@ public:
 
 	void AimAt(FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
 protected:

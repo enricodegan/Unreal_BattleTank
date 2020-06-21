@@ -31,8 +31,7 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel) { return; }
-	if (!Turret) { return; }
+	if (!Barrel || !Turret) { return; }
 
 	// Barrel Movement
 	FVector OutLaunchVelocity;

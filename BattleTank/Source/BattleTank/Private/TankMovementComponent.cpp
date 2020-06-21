@@ -13,9 +13,15 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 {
 	// No need to call Super:: as we're replacing the functionality
 	
-	auto TankName = GetOwner()->GetName();
-	auto MoveVelocityString = MoveVelocity.ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Tank name: %s | MoveVelocity: %s"), *TankName, *MoveVelocityString)
+	// Gives us a unit vector in the direction the Tank is facing
+	auto TankForwardDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	
+	// The direction the AI tank wants to move to
+	auto AIIntendedPath = MoveVelocity.GetSafeNormal();
+	
+	auto ForwardThrow = FVector::DotProduct(TankForwardDirection, AIIntendedPath);
+
+	IntendMoveForward(ForwardThrow);
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)

@@ -7,7 +7,8 @@ void UTankTurret::Rotate(float RelativeSpeed)
 {
 	// Move the turret the difference between current and desired
 		// Given the max rotation speed and the frame time
-	auto RotationChange = FMath::Clamp<float>(RelativeSpeed, -1, +1) * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
+	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, +1);
+	auto RotationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
 	
 	// RelativeRotation is a function of the FRotator USceneComponenet::RelativeRotation class. 
 	//It gives the rotation of a component relative to its parent.
