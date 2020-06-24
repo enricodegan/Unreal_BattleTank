@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Enrico Degan 2019
 
 #include "Tank.h"
 #include "TankAIController.h"
@@ -18,7 +18,7 @@ void ATankAIController::Tick(float DeltaTime)
 	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	auto ControlledTank = Cast<ATank>(GetPawn());
 
-	if (PlayerTank) 
+	if (ensure(PlayerTank)) 
 	{ 
 		// Move towards the player
 		MoveToActor(PlayerTank, AcceptanceRadius);

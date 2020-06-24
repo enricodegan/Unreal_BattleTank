@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Enrico Degan 2019
 
 #include "TankBarrel.h"
 #include "TankTurret.h"
@@ -19,19 +19,19 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
-	if (!BarrelToSet) { return; }
+	if (!ensure(BarrelToSet)) { return; }
 	Barrel = BarrelToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
-	if (!TurretToSet) { return; }
+	if (!ensure(TurretToSet)) { return; }
 	Turret = TurretToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel || !Turret) { return; }
+	if (!ensure(Barrel || Turret)) { return; }
 
 	// Barrel Movement
 	FVector OutLaunchVelocity;
