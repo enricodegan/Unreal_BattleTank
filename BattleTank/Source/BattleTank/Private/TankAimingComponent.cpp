@@ -2,6 +2,7 @@
 
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Components/SceneComponent.h"
@@ -29,7 +30,8 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 	Turret = TurretToSet; // This method is going to be called, and the barrel set, in Blueprints.
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
+
+void UTankAimingComponent::AimAt(FVector HitLocation)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 
@@ -62,9 +64,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	//}
 }
 
+// TODO give player full control over the turret (no influence from bHasAimSolution)
+	// A separate Turret Movement function allows the player to have full control over the turret (while the Barrel adjusts automatically)
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	if (!ensure(Barrel) || !ensure(Turret))) { return; }
+	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	
 	// Get current barrel position
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
@@ -76,17 +80,21 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	Turret->Rotate(DeltaRotator.Yaw);
 }
 
-/*
-// TODO give player full control over the turret (no influence from bHasAimSolution)
-	// A separate Turret Movement function allows the player to have full control over the turret (while the Barrel adjusts automatically)
-void UTankAimingComponent::MoveTurretTowards(FVector AimRotation)
+void UTankAimingComponent::Fire()
 {
-	// Get current turret position
-	auto TurretRotator = Turret->GetForwardVector().Rotation();
-	// Get the the difference between desires turret position (AimRotation) and current turret position
-	auto RotationAsRotator = AimRotation.Rotation();
-	auto DeltaRotator = RotationAsRotator - TurretRotator;
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
 
-	Turret->Rotate(DeltaRotator.Yaw);
+	bool IsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+	if (IsReloaded) 
+	{
+		// Spawn a projectile at the socket location on the barrel
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			Barrel->GetSocketLocation(FName("Projectile")),
+			Barrel->GetSocketRotation(FName("Projectile"))
+			);
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }
-*/

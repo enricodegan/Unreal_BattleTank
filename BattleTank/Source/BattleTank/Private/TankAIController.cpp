@@ -1,11 +1,10 @@
 // Copyright Enrico Degan 2019
 
-#include "Tank.h"
+#include "TankAimingComponent.h"
 #include "TankAIController.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
-
-// Depends on movement component via pathfinding system
+// Depends on movement component via path finding system
 
 void ATankAIController::BeginPlay()
 {
@@ -16,18 +15,19 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	auto ControlledTank = Cast<ATank>(GetPawn());
+	// You don't actually have to cast since the Tank already "is-a" pawn; therefore, it already inherits a pawn class -- no need to cast!
+	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	auto ControlledTank = GetPawn();
 
-	if (ensure(PlayerTank)) 
-	{ 
-		// Move towards the player
-		MoveToActor(PlayerTank, AcceptanceRadius);
+	if (!ensure(PlayerTank && ControlledTank)) { return; }
+	
+	// Move towards the player
+	MoveToActor(PlayerTank, AcceptanceRadius);
 		
-		// Aim towards the player
-		ControlledTank->AimAt(PlayerTank->GetActorLocation());
+	// Aim towards the player
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-		// Fire if ready
-		ControlledTank->Fire(); // TODO why is AI tank not firing?
-	}
+	// Fire if ready
+	AimingComponent->Fire(); // TODO why is AI tank not firing?
 }
