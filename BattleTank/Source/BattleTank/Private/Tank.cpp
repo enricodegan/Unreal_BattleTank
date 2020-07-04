@@ -17,6 +17,12 @@ ATank::ATank()
 	//TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
 
+// Called to bind functionality to input
+void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+{
+	Super::SetupPlayerInputComponent(InputComponent);
+}
+
 /*
  * PRE-REFACOTORING
  */

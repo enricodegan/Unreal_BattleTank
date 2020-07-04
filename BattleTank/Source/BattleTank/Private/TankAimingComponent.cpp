@@ -16,6 +16,13 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+	// TODO look into setting ProjectileBP throuhg C++
+	//static ConstructorHelpers::FObjectFinder<AProjectile> ProjectileBP(TEXT("C:/Users/enric/Documents/gamedev/gamedevUnreal/repos/U02_BattleTank/BattleTank/Content/Tank/TankModel/Projectile_BP.uasset"));
+	//if (ProjectileBP)
+	//{
+
+	//}
 }
 
 void UTankAimingComponent::BeginPlay()
@@ -28,6 +35,8 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
 	{
 		FiringState = EFiringState::Reloading;

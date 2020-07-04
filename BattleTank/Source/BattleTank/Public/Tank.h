@@ -13,6 +13,9 @@ class BATTLETANK_API ATank : public APawn
 	// Sets default values for this pawn's properties
 	ATank();
 
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+
 //public:
 	/// We retype the same method from the `TankAimingComponent` to make it accessible to the Tank_BP.
 	//UFUNCTION(BlueprintCallable, Category = Setup)

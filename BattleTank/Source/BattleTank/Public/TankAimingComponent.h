@@ -46,6 +46,7 @@ private:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
