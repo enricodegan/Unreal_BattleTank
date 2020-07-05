@@ -28,6 +28,9 @@ void ATankAIController::Tick(float DeltaTime)
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-	// Fire if ready
-	AimingComponent->Fire(); // TODO why is AI tank not firing?
+	// Fire when locked
+	if (AimingComponent->GetFiringState() == EFiringState::Locked)
+	{
+		AimingComponent->Fire(); // TODO why is AI tank not firing?
+	}
 }
