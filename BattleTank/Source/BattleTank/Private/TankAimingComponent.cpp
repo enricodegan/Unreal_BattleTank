@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Components/SceneComponent.h"
+#include "UObject/ConstructorHelpers.h"
 #include "TankAimingComponent.h"
 
 // Sets default values for this component's properties
@@ -18,11 +19,11 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 
 	// TODO set Projectile BP via C++
-	//static ConstructorHelpers::FObjectFinder<AProjectile> ProjectileBP(TEXT("C:/Users/enric/Documents/gamedev/gamedevUnreal/repos/U02_BattleTank/BattleTank/Content/Tank/TankModel/Projectile_BP.uasset"));
-	//if (ProjectileBP)
-	//{
-
-	//}
+	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("C:/Users/enric/Documents/gamedev/gamedevUnreal/repos/U02_BattleTank/BattleTank/Content/Tank/TankModel/Projectile_BP.uasset"));
+	if (Proj.Class)
+	{
+		ProjectileBlueprint = Proj.Class;
+	}
 }
 
 void UTankAimingComponent::BeginPlay()
