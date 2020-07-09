@@ -74,6 +74,7 @@ private:
 	float ReloadTimeInSeconds = 3;
 
 	// Set the ammo count
+		// We wont use an unsigned integer (uint32) because these are incompatible with UPROPERTYs
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	int32 RoundsLeft = 15;
 

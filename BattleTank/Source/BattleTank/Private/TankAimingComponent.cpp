@@ -18,8 +18,9 @@ UTankAimingComponent::UTankAimingComponent()
 
 	// ...
 
-	// TODO set Projectile BP via C++
-	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("C:/Users/enric/Documents/gamedev/gamedevUnreal/repos/U02_BattleTank/BattleTank/Content/Tank/TankModel/Projectile_BP.uasset"));
+	// Set the Projectile BP via C++ (due to bug) (unfortunately it has to be hard-coded)
+		// TODO is setting Projectile BP through C++ working?
+	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("/Game/Projectile/Projectile_BP"));
 	if (Proj.Class)
 	{
 		ProjectileBlueprint = Proj.Class;
