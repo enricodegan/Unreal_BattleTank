@@ -23,6 +23,25 @@ void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	Super::SetupPlayerInputComponent(InputComponent);
 }
 
+float ATank::GetHealthPercent() const
+{
+	// `(float)` converts to a float
+	return (float)CurrentHealth / (float)StartingHealth;
+}
+
+float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	int32 DamagePoints = FMath::RoundToInt(DamageAmount);
+	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
+
+	CurrentHealth -= DamageToApply;
+	if (CurrentHealth <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("A Dead Tank!"))
+	}
+	return DamageToApply;
+}
+
 /*
  * PRE-REFACOTORING
  */

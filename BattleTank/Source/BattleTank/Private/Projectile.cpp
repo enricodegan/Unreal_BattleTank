@@ -1,5 +1,6 @@
 // Copyright Enrico Degan 2019
 
+#include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
 // Sets default values
@@ -54,9 +55,17 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	SetRootComponent(ImpactBlast);
 	CollisionMesh->DestroyComponent();
 
-	/*FTimerHandle Timer;
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, Destory())*/
+	// Damage Enemy Tank
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		ProjectileDamage,
+		GetActorLocation(),
+		ExplosionForce->Radius, // Same radius as the impact ExplosionForce impact radius (for consistency)
+		UDamageType::StaticClass(),
+		TArray<AActor*>() // Damage all actors (so we don't populate the array)
+	);
 
+	// Delete the ProjectileBP after a `DestroyDelay`
 	FTimerHandle Timer;
 	GetWorld()->GetTimerManager().SetTimer(Timer, 
 		// Begin lambda expression https://docs.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp?view=vs-2019
