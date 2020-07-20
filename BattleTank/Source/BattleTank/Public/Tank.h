@@ -46,7 +46,7 @@ private:
 	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "Tank Health")
-	int32 CurrentHealth; // Initialized in Beginplay
+	int32 CurrentHealth; // Initialized in Begin play
 
 	/**
 	 * PRE-REFACTORING (Lecture 186-187 Archived Course)

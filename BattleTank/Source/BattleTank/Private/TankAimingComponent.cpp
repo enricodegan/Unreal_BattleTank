@@ -16,8 +16,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
-
 	// Set the Projectile BP via C++ (due to bug) (unfortunately it has to be hard-coded)
 		// TODO is setting Projectile BP through C++ working?
 	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("/Game/Projectile/Projectile_BP"));
@@ -63,7 +61,7 @@ bool UTankAimingComponent::IsBarrelMoving()
 	
 	auto BarrelForwardVector = Barrel->GetForwardVector();
 	auto Tolerance = 5;
-	return !BarrelForwardVector.Equals(AimDirection, 0.01);
+	return !BarrelForwardVector.Equals(TargetAimDirection, 0.01);
 }
 
 int32 UTankAimingComponent::GetRoundsLeft() const
@@ -111,8 +109,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	if (bHasAimSolution)
 	{
 		// GetSafeNormal() gets the normalized vector (a unit vector)
-		AimDirection = OutLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(AimDirection);
+		TargetAimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards(TargetAimDirection);
 	}
 	//else
 	//{
@@ -123,14 +121,14 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 
 // TODO give player full control over the turret (no influence from bHasAimSolution)
 	// A separate Turret Movement function allows the player to have full control over the turret (while the Barrel adjusts automatically)
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelTowards(FVector TargetAimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	
 	// Get current barrel position
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	// Get the difference between desired barrel position (AimDirection) and current barrel position
-	auto AimAsRotator = AimDirection.Rotation();
+	// Get the difference between desired barrel position (TargetAimDirection) and current barrel position
+	auto AimAsRotator = TargetAimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
 	// Always rotate along the shortest path
