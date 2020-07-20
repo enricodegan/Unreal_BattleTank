@@ -1,5 +1,6 @@
 // Copyright Enrico Degan 2019
 
+#include "Tank.h" // Implemented for cast on death
 #include "TankPlayerController.h"
 #include "TankAimingComponent.h"
 #include "BattleTank.h"
@@ -88,7 +89,7 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 
 bool ATankPlayerController::GetLookVectorHitLocation(FVector2D ScreenLocation, FVector& OutHitLocation) const
 {
-	FHitResult HitResult; 
+	FHitResult HitResult;
 	if (GetHitResultAtScreenPosition(ScreenLocation, ECollisionChannel::ECC_Visibility, false, HitResult))
 	{
 		OutHitLocation = HitResult.Location; // Set hit location
@@ -98,17 +99,17 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector2D ScreenLocation, F
 	return false; // Line trace didn't succeed
 
 	/* How Unreal Course Accomplished the LineTrace:
-	|| Check "Lecture 210. Creating an Out Parameter Method" to "Lecture 213. Using LineTraceSingleByChannel()" for more information... 
+	|| Check "Lecture 210. Creating an Out Parameter Method" to "Lecture 213. Using LineTraceSingleByChannel()" for more information...
 	||
 	||	FHitResult HitResult;
 	||	auto StartLocation = PlayerCameraManager->GetCameraLocation();
 	||	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
-	||	
-	||	
+	||
+	||
 	||	if (GetWorld()->LineTraceSingleByChannel(
-	||			HitResult, 
-	||			StartLocation, 
-	||			EndLocation, 
+	||			HitResult,
+	||			StartLocation,
+	||			EndLocation,
 	||			ECollisionChannel::ECC_Visibility)
 	||		)
 	||	{
@@ -117,6 +118,25 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector2D ScreenLocation, F
 	||	}
 	||	OutHitLocation = FVector(0);
 	||	return false; // Line trace didn't succeed
-	||	
+	||
 	*/
+}
+
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+
+		// Subscribe our local method to the tank's death event
+		PossessedTank->OnDeath().AddUniqueDynamic(this, &ATankPlayerController::OnPlayerTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPlayerTankDeath()
+{
+	StartSpectatingOnly();
 }

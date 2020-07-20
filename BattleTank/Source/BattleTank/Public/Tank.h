@@ -5,10 +5,21 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h" // ^^^ New classes ALWAYS go above! ^^^
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
+
+public:
+	FTankDelegate OnDeath();
+
+private:
+	// Sets default values for this pawn's properties
+	ATank();
+
+	virtual void BeginPlay() override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -31,24 +42,23 @@ class BATTLETANK_API ATank : public APawn
 	UFUNCTION(BlueprintPure, Category = "Tank Health")
 	float GetHealthPercent() const;
 
-	// APawn
-	//virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-//public:
-	/// We retype the same method from the `TankAimingComponent` to make it accessible to the Tank_BP.
-	//UFUNCTION(BlueprintCallable, Category = Setup)
-	//void SetBarrelReference(UTankBarrel* BarrelToSet); 
-
-	//UFUNCTION(BlueprintCallable, Category = Setup)
-	//void SetTurretReference(UTankTurret* TurretToSet);
-
-private:
-	// Sets default values for this pawn's properties
-	ATank();
-
 	UPROPERTY(EditDefaultsOnly, Category = "Tank Health")
 	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "Tank Health")
-	int32 CurrentHealth = StartingHealth;
+	int32 CurrentHealth; // Initialized in Beginplay
+
+	/**
+	 * PRE-REFACTORING (Lecture 186-187 Archived Course)
+	 */
+		// APawn
+		//virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	//public:
+		/// We retype the same method from the `TankAimingComponent` to make it accessible to the Tank_BP.
+		//UFUNCTION(BlueprintCallable, Category = Setup)
+		//void SetBarrelReference(UTankBarrel* BarrelToSet); 
+
+		//UFUNCTION(BlueprintCallable, Category = Setup)
+		//void SetTurretReference(UTankTurret* TurretToSet);
 };

@@ -1,7 +1,7 @@
 // Copyright Enrico Degan 2019
 
-#include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()

@@ -17,6 +17,13 @@ ATank::ATank()
 	//TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
 
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CurrentHealth = StartingHealth;
+}
+
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
@@ -37,7 +44,7 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEve
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("A Dead Tank!"))
+		OnDeath().Broadcast();
 	}
 	return DamageToApply;
 }

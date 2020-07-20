@@ -23,6 +23,11 @@ private:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void SetPawn(APawn* InPawn) override;
+
+	UFUNCTION()
+	void OnPossessedTankDeath();
+
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 };
