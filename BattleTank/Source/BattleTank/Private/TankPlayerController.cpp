@@ -132,7 +132,7 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 		if (!ensure(PossessedTank)) { return; }
 
 		// Subscribe our local method to the tank's death event
-		PossessedTank->OnDeath().AddUniqueDynamic(this, &ATankPlayerController::OnPlayerTankDeath);
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPlayerTankDeath);
 	}
 }
 

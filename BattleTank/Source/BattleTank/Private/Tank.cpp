@@ -44,7 +44,7 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEve
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		OnDeath().Broadcast();
+		OnDeath.Broadcast();
 	}
 	return DamageToApply;
 }

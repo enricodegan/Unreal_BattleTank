@@ -22,7 +22,7 @@ void ATankAIController::SetPawn(APawn* InPawn)
 		if (!PossessedTank) { return; } // If the object is not a tank (i.e. a mortar), then we return and don't add a death sequence to it.
 
 		// Subscribe our local method to the tank's death event
-		PossessedTank->OnDeath().AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
 	}
 }
 

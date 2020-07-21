@@ -13,7 +13,7 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
-	FTankDelegate OnDeath();
+	FTankDelegate OnDeath;
 
 private:
 	// Sets default values for this pawn's properties
