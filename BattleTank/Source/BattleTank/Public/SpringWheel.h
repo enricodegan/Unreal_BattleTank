@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include <PhysicsEngine/PhysicsConstraintComponent.h>
+#include <Components/SphereComponent.h>
 #include "SpringWheel.generated.h"
 
 UCLASS()
@@ -25,11 +26,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 private:
+	void SetupConstraint();
+
 	// Components
 	UPROPERTY(VisibleAnywhere, Category = Components)
-	UStaticMeshComponent* Wheel = nullptr;
+	USphereComponent* Wheel = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = Components)
+	UStaticMeshComponent* Axle = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = Components)
 	UPhysicsConstraintComponent* PhysicsConstraint = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = Components)
+	UPhysicsConstraintComponent* AxleWheelConstraint = nullptr;
 };

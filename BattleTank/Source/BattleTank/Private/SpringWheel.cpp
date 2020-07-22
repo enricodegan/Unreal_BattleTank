@@ -12,8 +12,16 @@ ASpringWheel::ASpringWheel()
 	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("Physics Constraint"));
 	SetRootComponent(PhysicsConstraint);
 
-	Wheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wheel"));
-	Wheel->SetupAttachment(PhysicsConstraint); // A better way to attach components to other components (compared to `AttachToComponent()`)
+	Axle = CreateDefaultSubobject<UStaticMeshComponent>(FName("Axle"));
+	Axle->SetupAttachment(PhysicsConstraint); // A better way to attach components to other components (compared to `AttachToComponent()`)
+
+	AxleWheelConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("AxleWheel Constraint"));
+	AxleWheelConstraint->SetupAttachment(Axle);
+	
+	Wheel = CreateDefaultSubobject<USphereComponent>(FName("Wheel"));
+	Wheel->SetupAttachment(Axle); // A better way to attach components to other components (compared to `AttachToComponent()`)
+
+
 }
 
 // Called when the game starts or when spawned
@@ -21,10 +29,7 @@ void ASpringWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetAttachParentActor())
-	{
-		PhysicsConstraint->SetConstrainedComponents();
-	}
+	SetupConstraint();
 }
 
 // Called every frame
@@ -32,5 +37,14 @@ void ASpringWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASpringWheel::SetupConstraint()
+{
+	if (!GetAttachParentActor()) { return; }
+	UPrimitiveComponent* BodyRoot = Cast<UPrimitiveComponent>(GetAttachParentActor()->GetRootComponent()); // i.e. the Tank
+	if (!BodyRoot) { return; }
+	PhysicsConstraint->SetConstrainedComponents(BodyRoot, NAME_None, Axle, NAME_None);
+	AxleWheelConstraint->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 }
 
