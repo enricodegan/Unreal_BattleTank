@@ -13,25 +13,23 @@ USpawnPoint::USpawnPoint()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// Automatically set the SpringWheel_BP as the SpawnClass object
-	//static ConstructorHelpers::FClassFinder<ASpringWheel> Springs(TEXT("/Game/Tank/SpringWheel_BP"));
-	//if (Springs.Class)
-	//{
-	//	SpawnClass = Springs.Class;
-	//}
+	static ConstructorHelpers::FClassFinder<ASpringWheel> Springs(TEXT("/Game/Tank/SpringWheel_BP"));
+	if (Springs.Class)
+	{
+		SpawnClass = Springs.Class;
+	}
 }
-
 
 // Called when the game starts
 void USpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto NewActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnClass, GetComponentTransform());
-	if (!NewActor) { return; }
-	NewActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
-	UGameplayStatics::FinishSpawningActor(NewActor, GetComponentTransform());
+	SpawnedActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnClass, GetComponentTransform());
+	if (!SpawnedActor) { return; }
+	SpawnedActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
+	UGameplayStatics::FinishSpawningActor(SpawnedActor, GetComponentTransform());
 }
-
 
 // Called every frame
 void USpawnPoint::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

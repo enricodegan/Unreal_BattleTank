@@ -27,14 +27,16 @@ private:
 	// Sets default values for this component's properties
 	UTankTrack();
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	TArray<class ASpringWheel*> GetWheels() const;
 
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	void DriveTrack(float CurrentThrottle);
 
-	void ApplyCorrectingForce();
-	void DriveTrack();
+	// *** LEGACY CODE ***
+		// Called when the game starts or when spawned
+		//virtual void BeginPlay() override;
+		
+		//UFUNCTION()
+		//void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
-	float CurrentThrottle = 0;
+		//void ApplyCorrectingForce();		
 };
